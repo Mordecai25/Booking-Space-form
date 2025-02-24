@@ -60,9 +60,6 @@
             margin-left: 20px;
             font-size: 24px;
         }
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -77,13 +74,13 @@
 
         <form id="bookingForm">
             <label for="name">Name:</label>
-            <input type="text" id="name" required>
+            <input type="text" id="name" autocomplete="name" required>
 
             <label for="department">Department:</label>
-            <input type="text" id="department" required>
+            <input type="text" id="department" autocomplete="organization" required>
 
             <label for="description">Description:</label>
-            <input type="text" id="description" required>
+            <input type="text" id="description" autocomplete="off" required>
 
             <label for="space">Select Space:</label>
             <select id="space" required>
@@ -93,13 +90,13 @@
             </select>
 
             <label for="date">Date:</label>
-            <input type="date" id="date" required>
+            <input type="date" id="date" autocomplete="off" required>
 
             <label for="startTime">Start Time:</label>
-            <input type="time" id="startTime" required>
+            <input type="time" id="startTime" autocomplete="off" required>
 
             <label for="endTime">End Time:</label>
-            <input type="time" id="endTime" required>
+            <input type="time" id="endTime" autocomplete="off" required>
 
             <label>
                 <input type="checkbox" id="wholeDay"> Book Whole Day (6:00 AM - 6:00 PM)
@@ -122,7 +119,6 @@
         document.getElementById("bookingForm").addEventListener("submit", async function(event) {
             event.preventDefault(); // Prevent page refresh
 
-            // Capture form data
             const formData = {
                 name: document.getElementById("name").value,
                 department: document.getElementById("department").value,
@@ -147,14 +143,10 @@
 
                 if (response.ok) {
                     alert("✅ Booking submitted successfully!");
-
-                    // Ask if the user wants to submit another booking
-                    if (confirm("Do you want to submit another booking?")) {
-                        document.getElementById("bookingForm").reset();
-                    } else {
-                        window.close();
-                    }
+                    document.getElementById("bookingForm").reset();
                 } else {
+                    const errorText = await response.text();
+                    console.error("Zapier Error Response:", errorText);
                     alert("❌ Failed to send data to Zapier. Check Zapier logs.");
                 }
             } catch (error) {
